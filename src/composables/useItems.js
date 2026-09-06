@@ -79,14 +79,15 @@ export function useItems() {
     }
   }
 
-  // 🟢 ดึงสินค้ารายตัว (สำหรับหน้า ItemDetail)
+// 🟢 ดึงสินค้ารายตัว (สำหรับหน้า ItemDetail)
   const fetchItemById = async (id) => {
     isLoading.value = true
     currentItem.value = null
     try {
       const { data, error } = await supabase
         .from('items')
-        .select('*, lender:profiles(first_name, last_name, avatar_url)')
+        // ลบ created_at ออกแล้ว
+        .select('*, lender:profiles(first_name, last_name, avatar_url, rental_count)')
         .eq('id', id)
         .single()
       
