@@ -23,7 +23,7 @@ const routes = [
   { path: '/profile', component: ProfileView, meta: { requiresAuth: true } },
   { path: '/contract', component: ContractView, meta: { requiresAuth: true } },
   { path: '/help', component: HelpView },
-  { path: '/about', component: AboutView }
+  { path: '/about', component: AboutView },
   { path: '/lender/register', component: LenderRegisterView, meta: { requiresAuth: true } },
   { path: '/lender/dashboard', component: LenderDashboardView, meta: { requiresAuth: true, role: 'lender' } },
   
