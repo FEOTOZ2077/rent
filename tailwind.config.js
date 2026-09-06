@@ -1,12 +1,16 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  // เพิ่มบรรทัดนี้เข้าไปเพื่อให้ Tailwind สแกนหาคลาสในไฟล์เหล่านี้
   content: [
     "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      // 🟢 เพิ่มโค้ดส่วนนี้เพื่อตั้งค่าฟอนต์เริ่มต้น
+      fontFamily: {
+        sans: ['Kanit', 'sans-serif'], // บังคับให้คลาส font-sans ทั้งหมดเปลี่ยนเป็น Kanit
+      },
+    },
   },
   plugins: [],
 }
