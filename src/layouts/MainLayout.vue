@@ -81,9 +81,16 @@ const handleLogout = () => {
 
           <div class="flex items-center space-x-3 md:space-x-4">
             
+            <!-- 🟢 ปุ่มเข้า Dashboard ของ Lender -->
             <RouterLink v-if="isAuthenticated && user?.role === 'lender'" to="/lender/dashboard" class="flex items-center gap-2 font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-4 py-2.5 rounded-full transition text-xs">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
               โหมดผู้ให้เช่า
+            </RouterLink>
+
+            <!-- 🔴 ปุ่มเข้า Dashboard ของ Admin -->
+            <RouterLink v-if="isAuthenticated && user?.role === 'admin'" to="/admin/dashboard" class="flex items-center gap-2 font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 px-4 py-2.5 rounded-full transition text-xs">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              โหมดแอดมิน
             </RouterLink>
 
             <RouterLink to="/cart" class="w-11 h-11 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-100 transition relative">
@@ -94,7 +101,7 @@ const handleLogout = () => {
             <!-- 👤 Profile Dropdown -->
             <div v-if="isAuthenticated" class="relative">
               <button @click="isProfileMenuOpen = !isProfileMenuOpen" class="flex items-center gap-3 bg-slate-50 pl-2.5 pr-4 py-1.5 rounded-full border border-slate-200 shadow-sm hover:bg-slate-100 transition">
-                <img :src="user?.avatar" class="w-8 h-8 rounded-full border border-white shadow-sm" />
+                <img :src="user?.avatar || `https://ui-avatars.com/api/?name=${user?.name || 'User'}`" class="w-8 h-8 rounded-full border border-white shadow-sm object-cover" />
                 <div class="flex flex-col text-left">
                   <span class="text-[10px] text-slate-400 font-bold leading-none">ยินดีต้อนรับ</span>
                   <span class="text-xs font-black text-slate-700 truncate max-w-[80px]">{{ user?.name }}</span>
@@ -112,9 +119,19 @@ const handleLogout = () => {
                 <RouterLink to="/profile" @click="isProfileMenuOpen = false" class="flex items-center gap-3 px-5 py-2.5 text-sm font-bold text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg> จัดการบัญชี
                 </RouterLink>
+
+                <RouterLink to="/contract" @click="isProfileMenuOpen = false" class="flex items-center gap-3 px-5 py-2.5 text-sm font-bold text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg> รายการเช่าของฉัน
+                </RouterLink>
                 
-                <RouterLink v-if="user?.role !== 'lender'" to="/lender/register" @click="isProfileMenuOpen = false" class="flex items-center gap-3 px-5 py-2.5 text-sm font-bold text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition">
+                <!-- ซ่อนปุ่มสมัคร หากเป็น Lender หรือ Admin อยู่แล้ว -->
+                <RouterLink v-if="user?.role !== 'lender' && user?.role !== 'admin'" to="/lender/register" @click="isProfileMenuOpen = false" class="flex items-center gap-3 px-5 py-2.5 text-sm font-bold text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg> สมัครเป็นผู้ให้เช่า
+                </RouterLink>
+
+                <!-- เพิ่มปุ่ม Admin ลงใน Dropdown ด้วย -->
+                <RouterLink v-if="user?.role === 'admin'" to="/admin/dashboard" @click="isProfileMenuOpen = false" class="flex items-center gap-3 px-5 py-2.5 text-sm font-bold text-slate-600 hover:bg-rose-50 hover:text-rose-600 transition">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg> แผงควบคุมผู้ดูแลระบบ
                 </RouterLink>
 
                 <div class="h-px bg-slate-100 my-2"></div>
@@ -165,12 +182,12 @@ const handleLogout = () => {
       <!-- 📱 Mobile Header -->
       <div class="md:hidden w-full bg-white h-16 flex justify-between items-center px-4 shadow-sm">
         <div class="flex items-center gap-3">
-          <button @click="isMobileMenuOpen = !isMobileMenuOpen" class="text-slate-700 text-2xl font-bold">
+          <button @click="isMobileMenuOpen = !isMobileMenuOpen" class="text-slate-700 text-2xl font-bold focus:outline-none">
             {{ isMobileMenuOpen ? '✕' : '☰' }}
           </button>
           <RouterLink to="/" class="text-2xl font-black text-indigo-600 tracking-tight">RentAll</RouterLink>
         </div>
-        <img v-if="isAuthenticated" :src="user?.avatar" class="w-8 h-8 rounded-full border border-slate-200" />
+        <img v-if="isAuthenticated" :src="user?.avatar || `https://ui-avatars.com/api/?name=${user?.name || 'U'}`" class="w-8 h-8 rounded-full border border-slate-200 object-cover" />
         <RouterLink v-else to="/auth" class="bg-slate-900 text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-sm">
           เข้าสู่ระบบ
         </RouterLink>
@@ -181,20 +198,22 @@ const handleLogout = () => {
     <!-- 📱 Mobile Dropdown Menu -->
     <div v-if="isMobileMenuOpen" class="md:hidden fixed top-16 left-0 w-full bg-white border-b border-slate-100 shadow-2xl z-40 flex flex-col px-6 py-6 space-y-5">
       <div v-if="isAuthenticated" class="flex items-center gap-3 pb-4 border-b border-slate-100">
-        <img :src="user?.avatar" class="w-12 h-12 rounded-full border border-slate-200" />
+        <img :src="user?.avatar || `https://ui-avatars.com/api/?name=${user?.name || 'U'}`" class="w-12 h-12 rounded-full border border-slate-200 object-cover" />
         <div>
           <p class="text-xs text-slate-400 font-bold">บัญชีของคุณ,</p>
           <p class="text-base font-black text-slate-800">{{ user?.name }}</p>
         </div>
       </div>
 
-      <RouterLink to="/" @click="isMobileMenuOpen = false" class="font-bold text-slate-700 text-base">หน้าแรก</RouterLink>
-      <RouterLink to="/search" @click="isMobileMenuOpen = false" class="font-bold text-slate-700 text-base">ค้นหาสินค้า</RouterLink>
-      <RouterLink to="/contract" @click="isMobileMenuOpen = false" class="font-bold text-slate-700 text-base">สัญญาเช่า</RouterLink>
-      <RouterLink to="/help" @click="isMobileMenuOpen = false" class="font-bold text-slate-700 text-base">ช่วยเหลือ</RouterLink>
+      <RouterLink to="/" @click="isMobileMenuOpen = false" class="font-bold text-slate-700 text-base hover:text-indigo-600">หน้าแรก</RouterLink>
+      <RouterLink to="/search" @click="isMobileMenuOpen = false" class="font-bold text-slate-700 text-base hover:text-indigo-600">ค้นหาสินค้า</RouterLink>
+      <RouterLink to="/contract" @click="isMobileMenuOpen = false" class="font-bold text-slate-700 text-base hover:text-indigo-600">สัญญาเช่า</RouterLink>
+      <RouterLink to="/help" @click="isMobileMenuOpen = false" class="font-bold text-slate-700 text-base hover:text-indigo-600">ช่วยเหลือ</RouterLink>
       
-      <RouterLink v-if="isAuthenticated && user?.role !== 'lender'" to="/lender/register" @click="isMobileMenuOpen = false" class="font-bold text-slate-700 text-base">สมัครผู้ให้เช่า</RouterLink>
-      <RouterLink v-if="isAuthenticated && user?.role === 'lender'" to="/lender/dashboard" @click="isMobileMenuOpen = false" class="font-bold text-indigo-600 text-base">โหมดผู้ให้เช่า</RouterLink>
+      <!-- เมนู Mobile ตาม Role -->
+      <RouterLink v-if="isAuthenticated && user?.role !== 'lender' && user?.role !== 'admin'" to="/lender/register" @click="isMobileMenuOpen = false" class="font-bold text-slate-700 text-base hover:text-indigo-600">สมัครผู้ให้เช่า</RouterLink>
+      <RouterLink v-if="isAuthenticated && user?.role === 'lender'" to="/lender/dashboard" @click="isMobileMenuOpen = false" class="font-bold text-indigo-600 text-base">เข้าแผงควบคุมร้านค้า</RouterLink>
+      <RouterLink v-if="isAuthenticated && user?.role === 'admin'" to="/admin/dashboard" @click="isMobileMenuOpen = false" class="font-bold text-rose-600 text-base">แผงควบคุมผู้ดูแลระบบ</RouterLink>
 
       <button v-if="isAuthenticated" @click="handleLogout" class="text-left font-bold text-rose-500 text-base pt-4 border-t border-slate-100">ออกจากระบบ</button>
     </div>
@@ -224,7 +243,6 @@ const handleLogout = () => {
       <RouterLink to="/cart" class="flex flex-col items-center justify-center text-slate-500 hover:text-indigo-600 [&.router-link-exact-active]:text-indigo-600 transition-colors py-1 px-2 w-16 relative">
         <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
         <span class="text-[10px] font-bold tracking-tight">ตะกร้า</span>
-        <span class="absolute top-0 right-2 bg-indigo-600 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-sm">2</span>
       </RouterLink>
 
       <RouterLink to="/contract" class="flex flex-col items-center justify-center text-slate-500 hover:text-indigo-600 [&.router-link-exact-active]:text-indigo-600 transition-colors py-1 px-2 w-16">
