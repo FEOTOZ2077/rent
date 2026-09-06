@@ -86,8 +86,7 @@ export function useItems() {
     try {
       const { data, error } = await supabase
         .from('items')
-        // ลบ created_at ออกแล้ว
-        .select('*, lender:profiles(first_name, last_name, avatar_url, rental_count)')
+        .select('*, lender:profiles(first_name, last_name, avatar_url)')
         .eq('id', id)
         .single()
       
