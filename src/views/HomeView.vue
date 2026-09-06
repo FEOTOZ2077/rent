@@ -1,6 +1,12 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { onMounted } from 'vue'
+import { useItems } from '@/composables/useItems'
+
+const { items: allItems, fetchItems } = useItems()
+
+onMounted(() => fetchItems())
 
 const router = useRouter()
 

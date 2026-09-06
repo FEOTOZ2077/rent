@@ -1,63 +1,74 @@
+<script setup>
+import { ref, onMounted } from 'vue'
+import { supabase } from '@/composables/useAuth'
+
+const allUsers = ref([])
+const allBookings = ref([])
+const platformRevenue = ref(0) 
+
+onMounted(async () => {
+  const { data: users } = await supabase.from('profiles').select('*')
+  allUsers.value = users || []
+
+  const { data: bookings } = await supabase.from('bookings').select('*')
+  allBookings.value = bookings || []
+
+  platformRevenue.value = allBookings.value.length * 150
+})
+</script>
+
 <template>
-  <div class="bg-slate-50 min-h-screen">
-    <!-- Admin Header -->
-    <div class="bg-rose-900 pb-24 pt-10 px-4 md:px-10">
-      <div class="max-w-[1400px] mx-auto">
-        <span class="bg-rose-500 text-white text-[10px] px-3 py-1 rounded-full font-bold tracking-widest uppercase">Admin Panel</span>
-        <h1 class="text-3xl md:text-4xl font-black text-white tracking-tight mt-3">ระบบหลังบ้าน (Control Panel) 🛡️</h1>
-        <p class="text-rose-200 mt-2 font-medium text-sm">ผู้ดูแลระบบ: ตรวจสอบและจัดการความเรียบร้อยของแพลตฟอร์ม</p>
+  <div class="bg-[#F8FAFC] min-h-screen font-sans pb-20">
+    <div class="bg-rose-600 text-white pt-10 pb-20 px-6">
+      <div class="max-w-[1200px] mx-auto">
+        <h1 class="text-3xl font-black mb-1">Super Admin Dashboard</h1>
+        <p class="text-rose-200 text-sm">ระบบควบคุมและจัดการแพลตฟอร์ม RentAll</p>
       </div>
     </div>
 
-    <div class="max-w-[1400px] mx-auto px-4 md:px-10 -mt-12">
-      <!-- Admin Stats Grid -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-        <div class="bg-white p-6 rounded-2xl md:rounded-[2rem] shadow-sm border border-slate-100">
-          <p class="text-slate-500 text-xs font-bold uppercase">ผู้ใช้ทั้งหมด</p>
-          <p class="text-2xl md:text-3xl font-black text-slate-800 mt-2">1,248</p>
-        </div>
-        <div class="bg-white p-6 rounded-2xl md:rounded-[2rem] shadow-sm border border-slate-100 relative overflow-hidden">
-          <div class="absolute right-0 top-0 w-2 h-full bg-amber-400"></div>
-          <p class="text-slate-500 text-xs font-bold uppercase">คำขอรอตรวจสอบ</p>
-          <p class="text-2xl md:text-3xl font-black text-amber-500 mt-2">15</p>
-        </div>
-        <div class="bg-white p-6 rounded-2xl md:rounded-[2rem] shadow-sm border border-slate-100 relative overflow-hidden">
-          <div class="absolute right-0 top-0 w-2 h-full bg-rose-500"></div>
-          <p class="text-slate-500 text-xs font-bold uppercase">ข้อพิพาท/แจ้งรายงาน</p>
-          <p class="text-2xl md:text-3xl font-black text-rose-500 mt-2">2</p>
-        </div>
-        <div class="bg-white p-6 rounded-2xl md:rounded-[2rem] shadow-sm border border-slate-100">
-          <p class="text-slate-500 text-xs font-bold uppercase">กระแสเงินหมุนเวียน</p>
-          <p class="text-2xl md:text-3xl font-black text-emerald-600 mt-2">฿2.4M</p>
-        </div>
+    <div class="max-w-[1200px] mx-auto px-6 -mt-10 grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
+        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">ผู้ใช้งานทั้งหมด</p>
+        <p class="text-4xl font-black text-slate-800">{{ allUsers.length }} <span class="text-sm">คน</span></p>
       </div>
+      <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
+        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">ธุรกรรมทั้งหมด</p>
+        <p class="text-4xl font-black text-slate-800">{{ allBookings.length }} <span class="text-sm">ออเดอร์</span></p>
+      </div>
+      <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 border-l-4 border-l-emerald-500">
+        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">รายได้แพลตฟอร์ม (Fee)</p>
+        <p class="text-4xl font-black text-emerald-500">฿{{ platformRevenue.toLocaleString() }}</p>
+      </div>
+    </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
-        <!-- ภารกิจที่ต้องทำ -->
-        <div class="lg:col-span-2 bg-white rounded-[2rem] shadow-sm border border-slate-100 p-8">
-          <h3 class="text-lg font-black text-slate-800 mb-4">รายการรออนุมัติล่าสุด (KYC & Listings)</h3>
-          <div class="space-y-3">
-             <div class="bg-slate-50 p-4 rounded-xl flex justify-between items-center border border-slate-100">
-               <div>
-                 <p class="font-bold text-sm text-slate-800">คำขอยืนยันตัวตนผู้ให้เช่า #ID-9821</p>
-                 <p class="text-xs text-slate-500 mt-1">สมชาย ใจดี (ส่งเมื่อ 10 นาทีที่แล้ว)</p>
-               </div>
-               <button class="bg-rose-100 text-rose-600 px-4 py-2 rounded-lg text-xs font-bold hover:bg-rose-200 transition">ตรวจสอบ</button>
-             </div>
-             <div class="bg-slate-50 p-4 rounded-xl flex justify-between items-center border border-slate-100">
-               <div>
-                 <p class="font-bold text-sm text-slate-800">แจ้งประกาศไม่เหมาะสม #REP-044</p>
-                 <p class="text-xs text-slate-500 mt-1">แจ้งโดย: User004 (ส่งเมื่อ 1 ชม.ที่แล้ว)</p>
-               </div>
-               <button class="bg-rose-100 text-rose-600 px-4 py-2 rounded-lg text-xs font-bold hover:bg-rose-200 transition">จัดการ</button>
-             </div>
-          </div>
-        </div>
-        <!-- กราฟจำลอง -->
-        <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 p-8 flex flex-col items-center justify-center text-center">
-          <div class="w-32 h-32 rounded-full border-8 border-slate-100 border-t-rose-500 border-r-rose-500 mb-6"></div>
-          <h3 class="text-sm font-black text-slate-800">สถานะเซิร์ฟเวอร์</h3>
-          <p class="text-emerald-500 text-xs font-bold mt-1">● ระบบทำงานปกติ 100%</p>
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 overflow-hidden">
+        <h2 class="text-xl font-black text-slate-800 mb-6">ผู้ใช้งานล่าสุด</h2>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm whitespace-nowrap">
+            <thead class="bg-slate-50 text-slate-500">
+              <tr>
+                <th class="p-4">UID</th>
+                <th class="p-4">อีเมล</th>
+                <th class="p-4">สถานะ (Role)</th>
+                <th class="p-4">จัดการ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="u in allUsers" :key="u.id" class="border-b border-slate-100 hover:bg-slate-50">
+                <td class="p-4 font-mono text-xs text-slate-400">{{ u.id.split('-')[0] }}...</td>
+                <td class="p-4 font-bold text-slate-800">{{ u.email }}</td>
+                <td class="p-4">
+                  <span :class="['px-3 py-1 rounded-full text-[10px] font-black uppercase', u.role === 'admin' ? 'bg-rose-100 text-rose-700' : (u.role === 'lender' ? 'bg-amber-100 text-amber-700' : 'bg-indigo-100 text-indigo-700')]">
+                    {{ u.role }}
+                  </span>
+                </td>
+                <td class="p-4">
+                  <button class="text-rose-500 text-xs font-bold hover:underline bg-rose-50 px-3 py-1.5 rounded-lg">ระงับบัญชี</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
