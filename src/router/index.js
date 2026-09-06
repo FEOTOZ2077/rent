@@ -11,6 +11,8 @@ import ContractView from '../views/user/ContractView.vue'
 import LenderRegisterView from '../views/lender/LenderRegisterView.vue'
 import LenderDashboardView from '../views/lender/LenderDashboardView.vue'
 import AdminDashboardView from '../views/admin/AdminDashboardView.vue'
+import HelpView from '../views/HelpView.vue'
+import AboutView from '../views/AboutView.vue'
 
 const routes = [
   { path: '/', component: HomeView },
@@ -20,7 +22,8 @@ const routes = [
   { path: '/auth', component: AuthView },
   { path: '/profile', component: ProfileView, meta: { requiresAuth: true } },
   { path: '/contract', component: ContractView, meta: { requiresAuth: true } },
-  
+  { path: '/help', component: HelpView },
+  { path: '/about', component: AboutView }
   { path: '/lender/register', component: LenderRegisterView, meta: { requiresAuth: true } },
   { path: '/lender/dashboard', component: LenderDashboardView, meta: { requiresAuth: true, role: 'lender' } },
   
