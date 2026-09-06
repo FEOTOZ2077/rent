@@ -77,11 +77,8 @@ const handlePayNow = () => {
       <!-- 🟢 ตะกร้าสินค้าปกติ (Step 1) -->
       <div v-else-if="!isCheckoutStep" class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         <div class="lg:col-span-2 space-y-4">
-          
           <div v-for="item in cartItems" :key="item.orderId" class="bg-white p-4 md:p-6 rounded-3xl border border-slate-200 shadow-sm flex gap-4 items-center transition hover:shadow-md">
-            <!-- Checkbox -->
             <input type="checkbox" :value="item.orderId" v-model="selectedOrderIds" class="w-5 h-5 accent-indigo-600 cursor-pointer" />
-            
             <img :src="item.itemImage" class="hidden sm:block w-32 h-24 object-cover rounded-xl border border-slate-100" />
             
             <div class="flex-grow w-full">
@@ -112,8 +109,6 @@ const handlePayNow = () => {
 
       <!-- 🟢 หน้าจอ Checkout / Payment (Step 2) -->
       <div v-else class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-        
-        <!-- รายการที่เลือกมาจ่าย -->
         <div class="lg:col-span-2 space-y-6">
           <h3 class="font-black text-slate-800 text-lg">สินค้าที่กำลังทำรายการชำระเงิน</h3>
           <div v-for="item in selectedItems" :key="item.orderId" class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
@@ -129,7 +124,6 @@ const handlePayNow = () => {
           </div>
         </div>
 
-        <!-- กล่องเลือกการชำระเงิน -->
         <div class="lg:col-span-1">
           <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-[0_12px_40px_rgba(0,0,0,0.06)] sticky top-24">
             <h3 class="font-black text-slate-900 mb-6 text-lg">วิธีชำระเงิน</h3>
@@ -144,7 +138,6 @@ const handlePayNow = () => {
               </label>
             </div>
 
-            <!-- กล่องแสดงวิธีจ่าย (QR หรือ ฟอร์มบัตร) -->
             <div v-if="paymentMethod === 'promptpay'" class="text-center p-5 bg-slate-50 border border-slate-200 rounded-2xl mb-8">
               <div class="w-32 h-32 bg-white mx-auto p-2 rounded-xl shadow-inner border border-slate-200 mb-2">
                 <svg class="w-full h-full text-slate-800" viewBox="0 0 24 24" fill="currentColor"><path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm14-2h4v2h-4v-2zm-4 0h2v4h-2v-4zm2 4h4v4h-4v-4zm-4 2h2v2h-2v-2z"/></svg>
@@ -163,9 +156,7 @@ const handlePayNow = () => {
             </button>
           </div>
         </div>
-
       </div>
-
     </div>
   </div>
 </template>
